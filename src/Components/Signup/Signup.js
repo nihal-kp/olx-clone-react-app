@@ -2,17 +2,56 @@ import React, { useState, useContext } from 'react';
 
 import Logo from '../../olx-logo.png';
 import './Signup.css';
-import { FirebaseContext } from '../../Store/FirebaseContext';
+import { FirebaseContext } from '../../Store/Context';
+import { getAuth, createUserWithEmailAndPassword, updateProfile, signOut, signInWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, collection, query, getDocs, addDoc, doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Signup() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const {firebase} = useContext(FirebaseContext)
+  const {firebase} = useContext(FirebaseContext);
+  const auth = getAuth();
+  const navigate = useNavigate();
+
   const handleSubmit =(e)=>{
     e.preventDefault();
-    console.log(firebase);
+    createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed up
+      const user = userCredential.user;
+      console.log("Registration Successful! User: ", user);
+      //Update user displayName
+      updateProfile(auth.currentUser, {
+        displayName: username
+      }).then(()=>{
+        // Add user information to Firestore
+        const firestore = getFirestore();
+        const usersCollection = collection(firestore, 'users');
+
+        const userData = {
+          id: user.uid,
+          username: username,
+          phone: phone,
+        };
+
+        addDoc(usersCollection, userData)
+          .then(() => {
+            console.log("Registration Successful! User data added to Firestore");
+            navigate('/login');
+          })
+          .catch((error) => {
+            console.error("Error adding user data to Firestore: ", error);
+          });
+      });
+    })
+    .catch((error) => {
+      // const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorMessage);
+    });
   }
 
   return (
@@ -71,7 +110,7 @@ export default function Signup() {
           <br />
           <button>Signup</button>
         </form>
-        <a href="/#">Login</a>
+        <Link to="/login">Login</Link>
       </div>
     </div>
   );

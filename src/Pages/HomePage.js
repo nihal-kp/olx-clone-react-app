@@ -6,7 +6,7 @@ import Banner from '../Components/Banner/Banner';
 import Posts from '../Components/Posts/Posts';
 import Footer from '../Components/Footer/Footer';
 
-function Home(props) {
+function Homepage(props) {
   return (
     <div className="homeParentDiv">
       <Header />
@@ -17,5 +17,5 @@ function Home(props) {
   );
 }
 
-export default Home;
+export default Homepage;
  
