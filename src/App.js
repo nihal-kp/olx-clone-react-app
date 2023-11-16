@@ -18,8 +18,8 @@ function App() {
   useEffect(()=>{
     onAuthStateChanged(auth, (user) => {
       setUser(user);
+      // console.log(user);
     });
-    // console.log(user);
   })
   return (
     <div>
