@@ -10,6 +10,7 @@ import SignupPage from './Pages/SignupPage';
 import LoginPage from './Pages/LoginPage';
 import { AuthContext } from './Store/Context';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import CreatePage from './Pages/CreatePage';
 
 function App() {
   const {setUser} = useContext(AuthContext);
@@ -28,6 +29,7 @@ function App() {
           <Route element={<HomePage />} path='/' />
           <Route element={<SignupPage />} path='/signup' />
           <Route element={<LoginPage />} path='/login' />
+          <Route element={<CreatePage /> } path='/create' />
         </Routes>
       </Router>
     </div>
