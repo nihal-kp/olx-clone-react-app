@@ -1,12 +1,59 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useContext } from 'react';
 import './Create.css';
 import Header from '../Header/Header';
+import { AuthContext } from '../../Store/Context';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const Create = () => {
+  const {user} = useContext(AuthContext);
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
   const [price, setPrice] = useState('');
   const [image, setImage] = useState('');
+  const navigate = useNavigate();
+  
+  const handleSubmit =(e)=>{
+    e.preventDefault();
+    const storage = getStorage();   // Create a root reference
+    const storageRef = ref(storage, `/images/${image.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, image);
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        // ... (optional: handle upload progress)
+      },
+      (error) => {
+        console.error('Error during upload:', error);
+      },
+      () => {
+        // Upload completed successfully, get the download URL
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then((url) => {
+            // console.log('File available at', downloadURL);
+            // Add product information to Firestore
+            const firestore = getFirestore();
+            const productsCollection = collection(firestore, 'products');
+
+            const productData = {
+              name,
+              category,
+              price,
+              url,
+              userId:user.uid,
+              createdAt:new Date().toDateString()
+            };
+            addDoc(productsCollection, productData);
+            navigate('/');
+          })
+          .catch((error) => {
+            console.error('Error getting download URL:', error);
+          });
+      }
+    );
+    
+  }
 
   return (
     <Fragment>
@@ -49,16 +96,14 @@ const Create = () => {
               onChange={(e)=>setPrice(e.target.value)}
             />
             <br />
-          </form>
           <br />
           <img alt="Posts" width="200px" height="200px" src={ image ? URL.createObjectURL(image) : ''}></img>
-          <form>
-            <br />
-            <input onChange={(e)=>{
-              setImage(e.target.files[0])
-            }} type="file" />
-            <br />
-            <button className="uploadBtn">upload and Submit</button>
+          <br />
+          <input onChange={(e)=>{
+            setImage(e.target.files[0])
+          }} type="file" />
+          <br />
+          <button onClick={handleSubmit} className="uploadBtn">upload and Submit</button>
           </form>
         </div>
       </card>
