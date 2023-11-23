@@ -1,7 +1,7 @@
 import React from 'react';
 
-import './View.css';
-function View() {
+import './PostDetail.css';
+function PostDetail() {
   return (
     <div className="viewParentDiv">
       <div className="imageShowDiv">
@@ -26,4 +26,4 @@ function View() {
     </div>
   );
 }
-export default View;
+export default PostDetail;

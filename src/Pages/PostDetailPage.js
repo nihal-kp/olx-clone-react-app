@@ -1,15 +1,15 @@
 import React from 'react'
 
 import Header from '../Components/Header/Header'
-import View from '../Components/View/View'
+import PostDetail from '../Components/PostDetail/PostDetail'
 
-function ViewPost(props) {
+function PostDetailPage(props) {
     return (
         <div>
             <Header />
-            <View/>
+            <PostDetail />
         </div>
     )
 }
 
-export default ViewPost
+export default PostDetailPage

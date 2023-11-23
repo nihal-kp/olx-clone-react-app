@@ -7,9 +7,8 @@ import Arrow from '../../assets/Arrow';
 import SellButton from '../../assets/SellButton';
 import SellButtonPlus from '../../assets/SellButtonPlus';
 import { AuthContext } from '../../Store/Context';
-import { useNavigate } from 'react-router';
 import { getAuth, signOut } from "firebase/auth";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Header() {
   const {user} = useContext(AuthContext);
@@ -54,11 +53,14 @@ function Header() {
               })
             }
           }>Logout</span> }
-          <SellButton></SellButton>
-          <div className="sellMenuContent">
-            <SellButtonPlus></SellButtonPlus>
-            <span>SELL</span>
-          </div>
+          {/* <Link to="/login">Login</Link> */}
+          <Link to="/create">
+            <SellButton></SellButton>
+            <div className="sellMenuContent">
+              <SellButtonPlus></SellButtonPlus>
+              <span>SELL</span>
+            </div>
+          </Link>
         </div>
       </div>
     </div>

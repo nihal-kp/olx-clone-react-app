@@ -11,6 +11,9 @@ import LoginPage from './Pages/LoginPage';
 import { AuthContext } from './Store/Context';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import CreatePage from './Pages/CreatePage';
+import PostDetailPage from './Pages/PostDetailPage';
+import Post from './Store/PostContext';
+
 
 function App() {
   const {setUser} = useContext(AuthContext);
@@ -24,14 +27,17 @@ function App() {
   })
   return (
     <div>
-      <Router>
-        <Routes>
-          <Route element={<HomePage />} path='/' />
-          <Route element={<SignupPage />} path='/signup' />
-          <Route element={<LoginPage />} path='/login' />
-          <Route element={<CreatePage /> } path='/create' />
-        </Routes>
-      </Router>
+      <Post>
+        <Router>
+          <Routes>
+            <Route element={<HomePage />} path='/' />
+            <Route element={<SignupPage />} path='/signup' />
+            <Route element={<LoginPage />} path='/login' />
+            <Route element={<CreatePage /> } path='/create' />
+            <Route element={<PostDetailPage /> } path='/post-detail' />
+          </Routes>
+        </Router>
+      </Post>
     </div>
   );
 }
