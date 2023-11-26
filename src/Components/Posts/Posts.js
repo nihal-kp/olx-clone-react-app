@@ -1,23 +1,24 @@
 import React, { useState, useEffect, useContext } from 'react';
 
 import Heart from '../../assets/Heart';
-import './Post.css';
+import './Posts.css';
 import { collection, getDocs, getFirestore, query } from 'firebase/firestore';
 // import { getAuth } from 'firebase/auth';
 import { FirebaseContext } from '../../Store/Context';
 import { useNavigate } from 'react-router-dom';
+import { PostContext } from '../../Store/PostContext';
 
 function Posts() {
-  const {firebase} = useContext(FirebaseContext);
+  const { firebase } = useContext(FirebaseContext);
   const firestore = getFirestore(firebase);
-  const queryProducts = query(collection(firestore, "products"));
+  const q = query(collection(firestore, "products"));
   // const auth = getAuth();
   const [products,setProducts] = useState([]);
-  const {setPostDetails} = useContext();
+  const {setPostDetails} = useContext(PostContext);
   const navigate = useNavigate();
 
   useEffect(()=>{
-    getDocs(queryProducts)
+    getDocs(q)
     .then((querySnapshot) => {
       const allPosts = querySnapshot.docs.map((product)=> {
         return {
@@ -31,7 +32,8 @@ function Posts() {
     .catch((e) => {
       console.error("Error fetching data: ", e);
     });
-  }, [queryProducts]);
+  }, [q]);
+
   return (
     <div className="postParentDiv">
       <div className="moreView">
